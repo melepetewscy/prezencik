@@ -9,17 +9,18 @@
 body {
     margin: 0;
     overflow: hidden;
-    background: radial-gradient(circle, #1a001f, #000);
+    background: radial-gradient(circle at center, #2b0033, #000);
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    font-family: 'Arial', sans-serif;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
     color: white;
 }
 
-/* GŁÓWNE SERCE */
-#heart, #heart2 {
+/* Serduszka */
+.heart {
     font-size: 120px;
     cursor: pointer;
     animation: pulse 1.5s infinite;
@@ -27,12 +28,12 @@ body {
     z-index: 10;
 }
 
-#heart2 {
-    display: none;
+.heart:hover {
+    transform: scale(1.2);
 }
 
-#heart:hover, #heart2:hover {
-    transform: scale(1.2);
+#heart2 {
+    display: none;
 }
 
 @keyframes pulse {
@@ -41,83 +42,108 @@ body {
     100% { transform: scale(1); }
 }
 
-/* WIADOMOŚCI */
+/* Wiadomości */
 .message {
-    position: absolute;
-    font-size: 70px;
+    font-size: 60px;
     font-weight: bold;
+    margin-top: 20px;
     opacity: 0;
-    text-align: center;
     transform: scale(0);
     transition: all 1s ease;
-    text-shadow: 0 0 20px #ff4da6, 0 0 40px #ff4da6;
+    text-align: center;
 }
 
 .show {
-    opacity: 1 !important;
-    transform: scale(1.2) !important;
+    opacity: 1;
+    transform: scale(1.2);
 }
 
-/* Kolorowy efekt tekstu */
-.rainbow {
-    background: linear-gradient(90deg, #ff4da6, #ffccff, #ff4da6);
-    background-size: 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: rainbowMove 3s linear infinite;
-}
-
-@keyframes rainbowMove {
-    0% { background-position: 0%; }
-    100% { background-position: 200%; }
-}
-
-/* Spadające serduszka */
+/* Spadające serca */
 .falling-heart {
     position: absolute;
-    color: pink;
-    animation: fall linear infinite;
-    pointer-events: none; /* TO NAPRAWIA KLIKANIE */
-}
-
-@keyframes fall {
-    from { transform: translateY(-10vh); }
-    to { transform: translateY(110vh); }
-}
-
-/* Gwiazdki */
-.star {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle 2s infinite alternate;
+    top: -50px;
+    font-size: 20px;
+    animation: fall linear forwards;
     pointer-events: none;
 }
 
-@keyframes twinkle {
-    from { opacity: 0.2; }
-    to { opacity: 1; }
+@keyframes fall {
+    to {
+        transform: translateY(110vh);
+        opacity: 0;
+    }
 }
-
-/* Błysk tła */
-.flash {
-    animation: flashBg 0.5s ease;
-}
-
-@keyframes flashBg {
-    0% { background: #fff; }
-    100% { background: radial-gradient(circle, #1a001f, #000); }
-}
-
 </style>
 </head>
 
 <body>
 
-<div id="heart">❤️</div>
-<div id="heart2">💖</div>
+<div id="heart1" class="heart">❤️</div>
+<div id="heart2" class="heart">💖</div>
 
-<div
+<div id="message1" class="message">Kocham Cię</div>
+<div id="message2" class="message">Dziękuję że jesteś &lt;3</div>
 
+<script>
+const heart1 = document.getElementById("heart1");
+const heart2 = document.getElementById("heart2");
+const message1 = document.getElementById("message1");
+const message2 = document.getElementById("message2");
+
+heart1.onclick = function() {
+    heart1.style.display = "none";
+    message1.classList.add("show");
+    createExplosion();
+    setTimeout(() => {
+        heart2.style.display = "block";
+    }, 1500);
+};
+
+heart2.onclick = function() {
+    heart2.style.display = "none";
+    message2.classList.add("show");
+    createExplosion();
+};
+
+/* Eksplozja serduszek */
+function createExplosion() {
+    for (let i = 0; i < 40; i++) {
+        const el = document.createElement("div");
+        el.innerHTML = "❤️";
+        el.style.position = "absolute";
+        el.style.left = "50%";
+        el.style.top = "50%";
+        el.style.fontSize = "20px";
+        el.style.pointerEvents = "none";
+        el.style.transition = "all 1s ease-out";
+
+        document.body.appendChild(el);
+
+        setTimeout(() => {
+            el.style.left = Math.random() * window.innerWidth + "px";
+            el.style.top = Math.random() * window.innerHeight + "px";
+            el.style.opacity = 0;
+        }, 10);
+
+        setTimeout(() => el.remove(), 1000);
+    }
+}
+
+/* Spadające serduszka */
+function createFallingHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("falling-heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * window.innerWidth + "px";
+    heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 5000);
+}
+
+setInterval(createFallingHeart, 300);
+</script>
+
+</body>
+</html>
