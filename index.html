@@ -18,31 +18,39 @@ body {
     color: white;
 }
 
-#heart {
+/* GŁÓWNE SERCE */
+#heart, #heart2 {
     font-size: 120px;
     cursor: pointer;
     animation: pulse 1.5s infinite;
     transition: transform 0.3s;
+    z-index: 10;
 }
 
-#heart:hover {
+#heart2 {
+    display: none;
+}
+
+#heart:hover, #heart2:hover {
     transform: scale(1.2);
 }
 
 @keyframes pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.15); }
     100% { transform: scale(1); }
 }
 
-#message {
+/* WIADOMOŚCI */
+.message {
     position: absolute;
-    font-size: 80px;
+    font-size: 70px;
     font-weight: bold;
     opacity: 0;
-    text-shadow: 0 0 20px #ff4da6, 0 0 40px #ff4da6;
+    text-align: center;
     transform: scale(0);
     transition: all 1s ease;
+    text-shadow: 0 0 20px #ff4da6, 0 0 40px #ff4da6;
 }
 
 .show {
@@ -50,72 +58,66 @@ body {
     transform: scale(1.2) !important;
 }
 
+/* Kolorowy efekt tekstu */
+.rainbow {
+    background: linear-gradient(90deg, #ff4da6, #ffccff, #ff4da6);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbowMove 3s linear infinite;
+}
+
+@keyframes rainbowMove {
+    0% { background-position: 0%; }
+    100% { background-position: 200%; }
+}
+
+/* Spadające serduszka */
 .falling-heart {
     position: absolute;
     color: pink;
     animation: fall linear infinite;
+    pointer-events: none; /* TO NAPRAWIA KLIKANIE */
 }
 
 @keyframes fall {
     from { transform: translateY(-10vh); }
     to { transform: translateY(110vh); }
 }
+
+/* Gwiazdki */
+.star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes twinkle {
+    from { opacity: 0.2; }
+    to { opacity: 1; }
+}
+
+/* Błysk tła */
+.flash {
+    animation: flashBg 0.5s ease;
+}
+
+@keyframes flashBg {
+    0% { background: #fff; }
+    100% { background: radial-gradient(circle, #1a001f, #000); }
+}
+
 </style>
 </head>
 
 <body>
 
 <div id="heart">❤️</div>
-<div id="message">Kocham Cię</div>
+<div id="heart2">💖</div>
 
-<script>
-const heart = document.getElementById("heart");
-const message = document.getElementById("message");
+<div
 
-heart.addEventListener("click", () => {
-    heart.style.display = "none";
-    message.classList.add("show");
-    createExplosion();
-});
-
-function createExplosion() {
-    for (let i = 0; i < 50; i++) {
-        const el = document.createElement("div");
-        el.innerHTML = "❤️";
-        el.style.position = "absolute";
-        el.style.left = "50%";
-        el.style.top = "50%";
-        el.style.fontSize = "20px";
-        el.style.transform = `translate(-50%, -50%) rotate(${Math.random()*360}deg)`;
-        el.style.transition = "all 1s ease-out";
-
-        document.body.appendChild(el);
-
-        setTimeout(() => {
-            el.style.left = Math.random() * window.innerWidth + "px";
-            el.style.top = Math.random() * window.innerHeight + "px";
-            el.style.opacity = 0;
-        }, 10);
-
-        setTimeout(() => el.remove(), 1000);
-    }
-}
-
-function createFallingHearts() {
-    const heart = document.createElement("div");
-    heart.classList.add("falling-heart");
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * window.innerWidth + "px";
-    heart.style.fontSize = Math.random() * 20 + 10 + "px";
-    heart.style.animationDuration = Math.random() * 3 + 2 + "s";
-
-    document.body.appendChild(heart);
-
-    setTimeout(() => heart.remove(), 5000);
-}
-
-setInterval(createFallingHearts, 300);
-</script>
-
-</body>
-</html>
